@@ -50,20 +50,15 @@ export default function Hero() {
         A Legendary Bachelor Feast
       </p>
 
-      {/* Hero image slot — replace src with NanoBanana-generated image URL */}
+      {/* Hero image slot — add HERO_IMAGE_URL to constants.js when ready */}
       <div
         className="glass-card relative z-10 flex items-center justify-center overflow-hidden"
         style={{ width: 'min(320px, 80vw)', height: 200 }}
       >
-        <img
-          src=""
-          alt="Princess Calvin on the throne"
-          className="w-full h-full object-cover rounded-[14px]"
-          onError={e => { e.currentTarget.style.display = 'none'; }}
-        />
         <span
           className="absolute font-cinzel text-xs tracking-[2px]"
           style={{ color: 'rgba(201,168,76,0.2)' }}
+          aria-label="Hero image placeholder"
         >
           [ Hero Image ]
         </span>

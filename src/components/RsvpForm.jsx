@@ -11,7 +11,6 @@ function TogglePair({ value, onChange, ayeLabel = 'Aye', nayLabel = 'Nay', fire 
     <div className="flex gap-1.5">
       <button
         type="button"
-        role="button"
         aria-label={ayeLabel}
         data-selected={value === 'aye' ? 'true' : 'false'}
         onClick={() => onChange(value === 'aye' ? null : 'aye')}
@@ -32,7 +31,6 @@ function TogglePair({ value, onChange, ayeLabel = 'Aye', nayLabel = 'Nay', fire 
       </button>
       <button
         type="button"
-        role="button"
         aria-label={nayLabel}
         data-selected={value === 'nay' ? 'true' : 'false'}
         onClick={() => onChange(value === 'nay' ? null : 'nay')}
@@ -73,6 +71,30 @@ function ActivityRow({ activity, value, onChange }) {
     </div>
   );
 }
+
+const legendStyle = {
+  fontFamily: 'Cinzel, serif',
+  fontSize: 11,
+  letterSpacing: 3,
+  color: 'rgba(201,168,76,0.5)',
+  textTransform: 'uppercase',
+  marginBottom: 8,
+  display: 'block',
+  width: '100%',
+};
+
+const inputStyle = {
+  background: 'rgba(201,168,76,0.05)',
+  border: '1px solid rgba(201,168,76,0.2)',
+  borderRadius: 8,
+  padding: '12px 16px',
+  color: 'var(--gold)',
+  fontFamily: 'Inter, sans-serif',
+  fontSize: 14,
+  width: '100%',
+  outline: 'none',
+  transition: 'border-color 0.2s, box-shadow 0.2s',
+};
 
 export default function RsvpForm() {
   const [name, setName]             = useState('');
@@ -122,29 +144,6 @@ export default function RsvpForm() {
     }
   }
 
-  const inputStyle = {
-    background: 'rgba(201,168,76,0.05)',
-    border: '1px solid rgba(201,168,76,0.2)',
-    borderRadius: 8,
-    padding: '12px 16px',
-    color: 'var(--gold)',
-    fontFamily: 'Inter, sans-serif',
-    fontSize: 14,
-    width: '100%',
-    outline: 'none',
-    transition: 'border-color 0.2s, box-shadow 0.2s',
-  };
-
-  const labelStyle = {
-    display: 'block',
-    fontFamily: 'Cinzel, serif',
-    fontSize: 11,
-    letterSpacing: 3,
-    color: 'rgba(201,168,76,0.5)',
-    textTransform: 'uppercase',
-    marginBottom: 8,
-  };
-
   return (
     <SectionWrapper className="py-20 max-w-3xl mx-auto px-6">
       <div className="chapter-label">Chapter IV</div>
@@ -159,8 +158,14 @@ export default function RsvpForm() {
 
         {/* Name */}
         <div>
-          <label style={labelStyle}>Your name, warrior</label>
+          <label
+            htmlFor="rsvp-name"
+            style={legendStyle}
+          >
+            Your name, warrior
+          </label>
           <input
+            id="rsvp-name"
             value={name}
             onChange={e => setName(e.target.value)}
             placeholder="Enter your name..."
@@ -171,8 +176,8 @@ export default function RsvpForm() {
         </div>
 
         {/* Overall attendance */}
-        <div>
-          <label style={labelStyle}>Will you answer the call?</label>
+        <fieldset className="border-0 p-0 m-0">
+          <legend style={legendStyle}>Will you answer the call?</legend>
           <div className="flex gap-3">
             {[
               { value: 'aye', label: '⚔ Aye, I shall attend' },
@@ -181,7 +186,6 @@ export default function RsvpForm() {
               <button
                 key={opt.value}
                 type="button"
-                role="button"
                 aria-label={opt.value === 'aye' ? 'Aye' : 'Nay'}
                 data-selected={attendance === opt.value ? 'true' : 'false'}
                 onClick={() => setAttendance(prev => prev === opt.value ? null : opt.value)}
@@ -202,11 +206,11 @@ export default function RsvpForm() {
               </button>
             ))}
           </div>
-        </div>
+        </fieldset>
 
         {/* Per-activity */}
-        <div>
-          <label style={labelStyle}>Which quests will you join?</label>
+        <fieldset className="border-0 p-0 m-0">
+          <legend style={legendStyle}>Which quests will you join?</legend>
           {ACTIVITIES.map(activity => (
             <ActivityRow
               key={activity.id}
@@ -215,12 +219,15 @@ export default function RsvpForm() {
               onChange={val => setActivity(activity.id, val)}
             />
           ))}
-        </div>
+        </fieldset>
 
         {/* Dietary */}
         <div>
-          <label style={labelStyle}>Dietary restrictions (optional)</label>
+          <label htmlFor="rsvp-dietary" style={legendStyle}>
+            Dietary restrictions (optional)
+          </label>
           <input
+            id="rsvp-dietary"
             value={dietary}
             onChange={e => setDietary(e.target.value)}
             placeholder="Allergies, thou sacred burdens..."
@@ -232,8 +239,11 @@ export default function RsvpForm() {
 
         {/* Comments */}
         <div>
-          <label style={labelStyle}>Comments / excuses</label>
+          <label htmlFor="rsvp-comments" style={legendStyle}>
+            Comments / excuses
+          </label>
           <textarea
+            id="rsvp-comments"
             value={comments}
             onChange={e => setComments(e.target.value)}
             placeholder="Speak your peace or hold your tongue forever..."
@@ -247,25 +257,27 @@ export default function RsvpForm() {
         {/* Submit */}
         <button
           type="submit"
-          role="button"
           aria-label="Pledge Your Sword"
-          disabled={status === 'submitting'}
+          disabled={status === 'submitting' || status === 'success'}
           className="w-full py-4 rounded-[10px] font-cinzel font-bold text-sm tracking-[3px] uppercase transition-all duration-200 disabled:opacity-60 hover:-translate-y-0.5 hover:shadow-[0_6px_30px_rgba(201,168,76,0.25)]"
           style={{
             background: 'linear-gradient(135deg, #8b1a1a, #c9a84c)',
             color: '#0a0602',
           }}
         >
-          {status === 'submitting' ? 'Sending...' :
-           status === 'success'    ? 'Your sword is pledged. ⚔' :
-           '⚔ Pledge Your Sword ⚔'}
+          {status === 'submitting' ? 'Sending...' : '⚔ Pledge Your Sword ⚔'}
         </button>
 
-        {status === 'error' && (
-          <p className="text-center text-xs tracking-widest font-cinzel text-fire" aria-live="polite">
-            The ravens failed to deliver. Submission failed — try again.
-          </p>
-        )}
+        {/* Status messages — aria-live so screen readers announce them */}
+        <p
+          aria-live="polite"
+          className="text-center text-xs tracking-widest font-cinzel min-h-[1em]"
+          style={{ color: status === 'error' ? 'var(--fire)' : status === 'success' ? 'var(--gold)' : 'transparent' }}
+        >
+          {status === 'success' && 'Your sword is pledged. ⚔'}
+          {status === 'error'   && 'The ravens failed to deliver. Submission failed — try again.'}
+        </p>
+
       </form>
     </SectionWrapper>
   );

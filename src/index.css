@@ -2,6 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --background: 25 10% 4%;
+    --foreground: 40 60% 70%;
+    --primary: 40 60% 55%;
+    --primary-foreground: 25 10% 4%;
+    --secondary: 25 15% 12%;
+    --secondary-foreground: 40 60% 70%;
+    --muted: 25 15% 12%;
+    --muted-foreground: 30 20% 35%;
+    --border: 35 50% 22%;
+    --input: 35 50% 22%;
+    --ring: 40 60% 55%;
+    --destructive: 0 60% 40%;
+    --destructive-foreground: 0 0% 95%;
+    --radius: 0.5rem;
+  }
+}
+
 :root {
   --bg-base: #080603;
   --gold: #d4a843;

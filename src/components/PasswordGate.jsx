@@ -47,29 +47,32 @@ export default function PasswordGate({ onUnlock }) {
           value={value}
           onChange={(e) => { setValue(e.target.value); setError(false); }}
           placeholder="enter the sacred word"
-          className="w-full rounded-lg px-5 py-3 font-cinzel text-base tracking-[4px] text-center text-gold bg-transparent outline-none transition-all"
-          style={{
-            border: `1px solid ${error ? 'rgba(139,26,26,0.8)' : 'rgba(201,168,76,0.25)'}`,
-            boxShadow: error ? '0 0 16px rgba(139,26,26,0.2)' : 'none',
-          }}
+          aria-describedby="gate-error"
+          aria-invalid={error}
+          className={`w-full rounded-lg px-5 py-3 font-cinzel text-base tracking-[4px] text-center text-gold bg-transparent outline-none transition-all ${
+            error
+              ? 'border border-[rgba(139,26,26,0.8)] shadow-[0_0_16px_rgba(139,26,26,0.2)]'
+              : 'border border-[rgba(201,168,76,0.25)]'
+          }`}
           autoComplete="off"
         />
-        {error && (
-          <p className="text-xs tracking-widest font-cinzel" style={{ color: 'rgba(200,60,60,0.9)' }}>
-            Wrong — the kingdom remains sealed
-          </p>
-        )}
+        {/* Always rendered; empty when no error so aria-live announces changes */}
+        <p
+          id="gate-error"
+          aria-live="polite"
+          className="text-xs tracking-widest font-cinzel min-h-[1em]"
+          style={{ color: 'rgba(200,60,60,0.9)' }}
+        >
+          {error ? 'Wrong — the kingdom remains sealed' : ''}
+        </p>
         <button
           type="submit"
           aria-label="Enter the Kingdom"
-          className="w-full rounded-lg py-3 font-cinzel text-sm font-bold tracking-[3px] uppercase transition-all hover:-translate-y-0.5"
+          className="w-full rounded-lg py-3 font-cinzel text-sm font-bold tracking-[3px] uppercase transition-all hover:-translate-y-0.5 hover:shadow-[0_4px_24px_rgba(201,168,76,0.3)]"
           style={{
             background: 'linear-gradient(135deg, #8b1a1a, #c9a84c)',
             color: '#0a0602',
-            boxShadow: '0 2px 16px rgba(201,168,76,0)',
           }}
-          onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 24px rgba(201,168,76,0.3)'}
-          onMouseLeave={e => e.currentTarget.style.boxShadow = '0 2px 16px rgba(201,168,76,0)'}
         >
           Enter the Kingdom
         </button>

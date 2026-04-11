@@ -55,7 +55,7 @@ export default function VikingCode() {
                 color: 'var(--gold)',
               }}
             >
-              {rule.icon} {rule.label}
+              <span aria-hidden="true">{rule.icon}</span>{' '}{rule.label}
             </span>
           ))}
         </div>

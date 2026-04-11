@@ -20,7 +20,7 @@ describe('PasswordGate', () => {
 
   it('does NOT call onUnlock for a wrong password', () => {
     const onUnlock = vi.fn();
-    render(<PasswordGate onUnlock={() => {}} />);
+    render(<PasswordGate onUnlock={onUnlock} />);
     const input = screen.getByPlaceholderText(/sacred word/i);
     fireEvent.change(input, { target: { value: 'wrongword' } });
     fireEvent.click(screen.getByRole('button', { name: /enter/i }));

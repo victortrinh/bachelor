@@ -16,7 +16,7 @@ A single-page React application serving as a password-protected RSVP site for Ca
 |---|---|---|
 | Framework | React + Vite | Enables 21st.dev components; still deploys as static files |
 | Styling | Tailwind CSS + custom CSS vars | Utility-first with themed overrides |
-| Components | 21st.dev (shadcn-style) | Modern glassmorphism UI: toggles, cards, inputs |
+| Components | 21st.dev (shadcn-style) | Specific components: `Button`, `Input`, `Textarea`, `Toggle` (Aye/Nay), `Card` for quest and form surfaces |
 | Form backend | Formspree (free tier) | Fully custom-styled native HTML form; 50 submissions/month is sufficient for ~20 guests; responses go to email |
 | Deployment | Netlify or Vercel (free tier) | Auto-builds from GitHub on push; zero config |
 | Fonts | Cinzel (headers) + Inter (body) via Google Fonts | Cinzel = cinematic medieval; Inter = clean, modern, readable |
@@ -115,6 +115,12 @@ All content is a single scrolling page. The password gate renders as a full-scre
 - **Form backend:** Formspree. Action URL is a single constant `FORMSPREE_ENDPOINT` at the top of the form component — replace with your Formspree form ID after signup.
 - On success: button text changes to *"Your sword is pledged. ⚔"*, form fields clear.
 - On error: error message in fire colour below the button.
+- **Formspree field names** (used as `name` attributes so responses are readable in the dashboard):
+  - `name` — guest name
+  - `attendance` — overall `"aye"` or `"nay"`
+  - `activity_brunch`, `activity_skeet`, `activity_supper`, `activity_axes`, `activity_tavern` — each `"aye"` or `"nay"`
+  - `dietary` — free text
+  - `comments` — free text
 
 ### 6. Footer
 - Top border: fading gold line
@@ -171,6 +177,17 @@ Locations are not in the data model yet. When ready, add a `location` field to e
 - **Hero fire pulse:** subtle `box-shadow` keyframe animation on the hero's radial glow (3s loop, amplitude ±15% opacity)
 - **Button hover:** `translateY(-1px)` + gold `box-shadow` spread on all primary buttons
 - **Gate fade-out:** `opacity: 0` → `display: none` after 0.6s transition on correct password entry
+
+---
+
+## Responsive Design
+
+- **Mobile-first.** All sections stack vertically on small screens.
+- Hero title uses `clamp()` — scales from 28px (mobile) to 52px (desktop)
+- Countdown box: on screens < 360px, drop seconds unit to prevent overflow
+- Quest log cards: full-width on mobile, max `700px` centered on desktop
+- RSVP form: full-width on mobile; activity row Aye/Nay buttons shrink to icon-only (`A` / `N`) below 400px if needed
+- Password gate input and button: `width: min(280px, 90vw)`
 
 ---
 

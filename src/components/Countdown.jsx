@@ -50,6 +50,7 @@ export default function Countdown() {
     <div
       className="glass-card flex items-center gap-5 px-8 py-4"
       role="timer"
+      aria-live="off"
       aria-label="Countdown to the bachelor party"
     >
       <CountdownUnit value={days}    label="Days"    critical={isCritical} />

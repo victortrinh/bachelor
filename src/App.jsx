@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import PasswordGate from '@/components/PasswordGate';
 import Hero from '@/components/Hero';
 import QuestLog from '@/components/QuestLog';
@@ -13,13 +13,20 @@ export default function App() {
     () => sessionStorage.getItem(SESSION_KEY) === 'true'
   );
   const [gateVisible, setGateVisible] = useState(!unlocked);
+  const unlockTimerRef = useRef(null);
 
   function handleUnlock() {
     sessionStorage.setItem(SESSION_KEY, 'true');
     // fade the gate out, then remove it
     setGateVisible(false);
-    setTimeout(() => setUnlocked(true), 700);
+    unlockTimerRef.current = setTimeout(() => setUnlocked(true), 700);
   }
+
+  useEffect(() => {
+    return () => {
+      if (unlockTimerRef.current) clearTimeout(unlockTimerRef.current);
+    };
+  }, []);
 
   return (
     <>

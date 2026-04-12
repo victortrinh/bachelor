@@ -63,7 +63,7 @@ export default function PasswordGate({ onUnlock }) {
           className="text-xs tracking-widest font-cinzel min-h-[1em]"
           style={{ color: 'rgba(200,60,60,0.9)' }}
         >
-          {error ? 'Wrong — the kingdom remains sealed' : ''}
+          {error ? 'Wrong. The kingdom remains sealed.' : ''}
         </p>
         <button
           type="submit"

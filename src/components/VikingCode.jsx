@@ -11,7 +11,7 @@ const RULES = [
 export default function VikingCode() {
   return (
     <SectionWrapper className="py-20 max-w-3xl mx-auto px-6">
-      <div className="chapter-label">Chapter III</div>
+      <div className="chapter-label">Chapter II</div>
       <h2
         className="font-cinzel font-bold text-center mb-10 tracking-[2px]"
         style={{ fontSize: 'clamp(20px, 4vw, 30px)', color: 'var(--gold)' }}
@@ -36,9 +36,9 @@ export default function VikingCode() {
         <p className="text-[15px] leading-relaxed italic mb-6" style={{ color: '#a07830' }}>
           You have been summoned to witness the last days of a free man.{' '}
           <strong className="not-italic" style={{ color: 'var(--gold)' }}>Calvin Leung</strong>
-          {' '}— known henceforth as{' '}
+          {', '}known henceforth as{' '}
           <strong className="not-italic" style={{ color: 'var(--gold)' }}>Princess Calvin</strong>
-          {' '}— shall be escorted into matrimony with all the dignity he deserves.
+          {', '}shall be escorted into matrimony with all the dignity he deserves.
           <br /><br />
           Which is to say: <strong className="not-italic" style={{ color: 'var(--gold)' }}>very little.</strong>
         </p>

@@ -27,7 +27,7 @@ export default function Hero() {
 
       {/* Chapter label */}
       <p className="font-cinzel text-[10px] tracking-[5px] uppercase relative z-10 text-gold-dim">
-        Chapter I — The Beginning of the End
+        Chapter I: The Beginning of the End
       </p>
 
       {/* Main title */}

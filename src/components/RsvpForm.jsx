@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ACTIVITIES, FORMSPREE_ENDPOINT } from '@/lib/constants';
 import SectionWrapper from './SectionWrapper';
 
@@ -103,17 +103,29 @@ export default function RsvpForm() {
   const [relation, setRelation]     = useState('');
   const [attendance, setAttendance] = useState(null);
   const [activities, setActivities] = useState(INITIAL_ACTIVITIES);
-  const [needsLift, setNeedsLift]   = useState(null);
-  const [offersLift, setOffersLift] = useState(null);
-  const [liftFrom, setLiftFrom]     = useState('');
-  const [liftSeats, setLiftSeats]   = useState('');
-  const [budget, setBudget]         = useState('');
+  const [needsLift, setNeedsLift]       = useState(null);
+  const [liftNeedFrom, setLiftNeedFrom] = useState('');
+  const [offersLift, setOffersLift]     = useState(null);
+  const [liftFrom, setLiftFrom]         = useState('');
+  const [liftSeats, setLiftSeats]       = useState('');
   const [dietary, setDietary]       = useState('');
   const [special, setSpecial]       = useState('');
   const [kinName, setKinName]       = useState('');
   const [kinContact, setKinContact] = useState('');
   const [comments, setComments]     = useState('');
   const [status, setStatus]         = useState('idle'); // idle | submitting | success | error
+
+  useEffect(() => {
+    if (attendance === 'nay') {
+      setActivities(Object.fromEntries(ACTIVITIES.map(a => [a.id, 'nay'])));
+      setNeedsLift('nay');
+      setOffersLift('nay');
+    } else {
+      setActivities(INITIAL_ACTIVITIES);
+      setNeedsLift(null);
+      setOffersLift(null);
+    }
+  }, [attendance]);
 
   function setActivity(id, value) {
     setActivities(prev => ({ ...prev, [id]: value }));
@@ -134,8 +146,8 @@ export default function RsvpForm() {
       activity_tavern:  activities.tavern  ?? 'no answer',
       needs_lift:  needsLift  ?? 'no answer',
       offers_lift: offersLift ?? 'no answer',
+      ...(needsLift  === 'aye' && { lift_need_from: liftNeedFrom }),
       ...(offersLift === 'aye' && { lift_from: liftFrom, lift_seats: liftSeats }),
-      budget,
       dietary,
       special_tribute: special,
       next_of_kin_name:    kinName,
@@ -156,9 +168,8 @@ export default function RsvpForm() {
         setActivities(INITIAL_ACTIVITIES);
         setDietary(''); setComments('');
         setRelation('');
-        setNeedsLift(null); setOffersLift(null);
-        setLiftFrom(''); setLiftSeats('');
-        setBudget('');
+        setNeedsLift(null); setLiftNeedFrom('');
+        setOffersLift(null); setLiftFrom(''); setLiftSeats('');
         setSpecial('');
         setKinName(''); setKinContact('');
       } else {
@@ -190,8 +201,8 @@ export default function RsvpForm() {
             <span aria-hidden="true">⚔</span> Respond with haste <span aria-hidden="true">⚔</span>
           </p>
           <p className="text-[12px] leading-relaxed" style={{ color: 'rgba(201,168,76,0.6)', fontFamily: 'Inter, sans-serif' }}>
-            The raiding expedition is less than three weeks away. Princess Calvin extends his sincerest
-            apologies for the urgency — he took longer than expected to accept his fate.
+            The raiding expedition is less than three weeks away. Princess Calvin is sorry about the short
+            notice. He took longer than expected to come to terms with his fate.
           </p>
         </div>
 
@@ -223,7 +234,7 @@ export default function RsvpForm() {
             id="rsvp-relation"
             value={relation}
             onChange={e => setRelation(e.target.value)}
-            placeholder="Explain to your fellow raiders what dark fate or cherished bond has led you to this moment..."
+            placeholder="Explain to your fellow raiders what dark fate or stubborn loyalty has dragged you into this..."
             rows={2}
             style={{ ...inputStyle, resize: 'vertical' }}
             onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
@@ -287,6 +298,20 @@ export default function RsvpForm() {
               </span>
               <TogglePair value={needsLift}  onChange={setNeedsLift}  groupLabel="Do you need a lift?" />
             </div>
+            {needsLift === 'aye' && (
+              <div>
+                <label htmlFor="rsvp-lift-need-from" style={{ ...legendStyle, marginBottom: 4 }}>Departing from</label>
+                <input
+                  id="rsvp-lift-need-from"
+                  value={liftNeedFrom}
+                  onChange={e => setLiftNeedFrom(e.target.value)}
+                  placeholder="e.g. Brossard"
+                  style={inputStyle}
+                  onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
+                  onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
+                />
+              </div>
+            )}
             <div className="flex items-center justify-between">
               <span className="text-[13px]" style={{ color: 'rgba(201,168,76,0.7)', fontFamily: 'Inter, sans-serif' }}>
                 Can you offer a lift?
@@ -327,21 +352,6 @@ export default function RsvpForm() {
           </div>
         </fieldset>
 
-        {/* Budget */}
-        <div>
-          <label htmlFor="rsvp-budget" style={legendStyle}>
-            Budget for the evening (confidential)
-          </label>
-          <input
-            id="rsvp-budget"
-            value={budget}
-            onChange={e => setBudget(e.target.value)}
-            placeholder="e.g. $50–100 — your answer stays between you and the king's treasury"
-            style={inputStyle}
-            onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
-            onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
-          />
-        </div>
 
         {/* Dietary */}
         <div>
@@ -386,7 +396,7 @@ export default function RsvpForm() {
                 id="rsvp-kin-name"
                 value={kinName}
                 onChange={e => setKinName(e.target.value)}
-                placeholder="Name of your chosen guardian..."
+                placeholder="Who do we notify when things go sideways..."
                 style={inputStyle}
                 onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
                 onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
@@ -445,7 +455,7 @@ export default function RsvpForm() {
           style={{ color: status === 'error' ? 'var(--fire)' : status === 'success' ? 'var(--gold)' : 'transparent' }}
         >
           {status === 'success' && 'Your sword is pledged. ⚔'}
-          {status === 'error'   && 'The ravens failed to deliver. Submission failed — try again.'}
+          {status === 'error'   && 'The ravens dropped it. Try again.'}
         </p>
 
       </form>

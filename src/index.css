@@ -82,6 +82,92 @@ body {
   transform: translateY(0);
 }
 
+/* ── Scroll — Quest Log ────────────────────────────────── */
+
+/* Outer wrapper: drop-shadow follows the irregular clip-path silhouette */
+.scroll-outer {
+  filter:
+    drop-shadow(0 20px 56px rgba(0,0,0,0.72))
+    drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+}
+
+/* Shared roll styles */
+.scroll-roll {
+  position: relative;
+  z-index: 2;
+}
+
+/* Top roll — cylinder highlight faces upward */
+.scroll-roll-top {
+  height: 46px;
+  margin-bottom: -6px;
+  border-radius: 50% 50% 0 0 / 20px 20px 0 0;
+  background: linear-gradient(180deg,
+    #1a0d00  0%,
+    #5c3510  6%,
+    #a87030 16%,
+    #d4a84c 26%,
+    #e8c86a 34%,
+    #d4a84c 44%,
+    #9a6828 56%,
+    #4a2808 68%,
+    #6b3e14 78%,
+    #c4984a 88%,
+    #dfc87a 100%
+  );
+  box-shadow: 0 4px 12px rgba(0,0,0,0.45);
+}
+
+/* Parchment body */
+.scroll-parchment {
+  --gold: #3d2200;
+  position: relative;
+  z-index: 1;
+
+  background:
+    radial-gradient(ellipse at 8%  20%, rgba(160,100,20,0.20) 0%, transparent 42%),
+    radial-gradient(ellipse at 92% 80%, rgba(110, 65,10,0.16) 0%, transparent 42%),
+    radial-gradient(ellipse at 50% 50%, rgba(200,160,60,0.06) 0%, transparent 60%),
+    linear-gradient(160deg, #ecdea0 0%, #dfc87a 35%, #e8d590 65%, #d9c274 100%);
+
+  /* Torn side edges — polygon zigzags 0–2% left, 98–100% right */
+  clip-path: polygon(
+    0%    0%,
+    1.5%  5%,  0%    11%, 2%    18%, 0.5%  25%, 1.5%  33%,
+    0%   40%,  1%    47%, 0.5%  54%, 1.5%  61%, 0%    68%,
+    1%   75%,  0.5%  82%, 1.5%  89%, 0%    95%, 1%   100%,
+    99%  100%, 100%  95%, 98.5% 89%, 100%  82%, 99%   75%,
+    100%  68%, 98.5% 61%, 100%  54%, 99%   47%, 100%  40%,
+    98.5% 33%, 100%  25%, 98%   18%, 100%  11%, 98.5%  5%, 100% 0%
+  );
+}
+
+/* Bottom roll — cylinder highlight faces downward (mirror of top) */
+.scroll-roll-bottom {
+  height: 36px;
+  margin-top: -6px;
+  border-radius: 0 0 50% 50% / 0 0 16px 16px;
+  background: linear-gradient(180deg,
+    #dfc87a  0%,
+    #c4984a 12%,
+    #6b3e14 22%,
+    #4a2808 32%,
+    #9a6828 46%,
+    #d4a84c 58%,
+    #e8c86a 68%,
+    #d4a84c 78%,
+    #a87030 88%,
+    #5c3510 94%,
+    #1a0d00 100%
+  );
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.35), 0 5px 14px rgba(0,0,0,0.45);
+}
+
+/* Chapter label adapted to dark-ink parchment */
+.scroll-parchment .chapter-label        { color: rgba(90,55,10,0.65); }
+.scroll-parchment .chapter-label::before { background: linear-gradient(to right, transparent, rgba(130,80,15,0.3)); }
+.scroll-parchment .chapter-label::after  { background: linear-gradient(to left,  transparent, rgba(130,80,15,0.3)); }
+
 /* Fire pulse on hero glow */
 @keyframes fire-pulse {
   0%, 100% { opacity: 0.18; }

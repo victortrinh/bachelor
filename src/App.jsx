@@ -40,9 +40,9 @@ export default function App() {
       >
         <Hero />
         <div className="h-px mx-6" style={{ background: 'linear-gradient(to right, transparent, rgba(201,168,76,0.15), transparent)' }} />
-        <QuestLog />
-        <div className="h-px mx-6" style={{ background: 'linear-gradient(to right, transparent, rgba(201,168,76,0.15), transparent)' }} />
         <VikingCode />
+        <div className="h-px mx-6" style={{ background: 'linear-gradient(to right, transparent, rgba(201,168,76,0.15), transparent)' }} />
+        <QuestLog />
         <div className="h-px mx-6" style={{ background: 'linear-gradient(to right, transparent, rgba(201,168,76,0.15), transparent)' }} />
         <RsvpForm />
         <Footer />

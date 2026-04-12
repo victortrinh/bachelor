@@ -50,18 +50,20 @@ export default function Hero() {
         A Legendary Bachelor Feast
       </p>
 
-      {/* Hero image slot — add HERO_IMAGE_URL to constants.js when ready */}
+      {/* Hero image */}
       <div
-        className="glass-card relative z-10 flex items-center justify-center overflow-hidden"
-        style={{ width: 'min(320px, 80vw)', height: 200 }}
+        className="relative z-10 overflow-hidden rounded-lg"
+        style={{
+          width: 'min(320px, 80vw)',
+          border: '1px solid rgba(201,168,76,0.3)',
+          boxShadow: '0 0 40px rgba(255,90,0,0.15)',
+        }}
       >
-        <span
-          className="absolute font-cinzel text-xs tracking-[2px]"
-          style={{ color: 'rgba(201,168,76,0.2)' }}
-          aria-label="Hero image placeholder"
-        >
-          [ Hero Image ]
-        </span>
+        <img
+          src="/hero.png"
+          alt="Princess Calvin — Viking warrior on the throne"
+          className="w-full h-auto block"
+        />
       </div>
 
       {/* Countdown */}

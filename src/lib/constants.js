@@ -1,4 +1,6 @@
-export const PASSWORD = 'vikingsonly';
+// Set VITE_PASSWORD in your hosting platform's environment variables (Netlify/Vercel).
+// Falls back to 'vikingsonly' for local dev — never commit the real password here.
+export const PASSWORD = import.meta.env.VITE_PASSWORD ?? 'vikingsonly';
 
 // UPDATE THE TIMEZONE OFFSET before deploying.
 // '-05:00' = CDT (Central Daylight Time). Change to match the event's local timezone.

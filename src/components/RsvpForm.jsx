@@ -98,9 +98,18 @@ const inputStyle = {
 
 export default function RsvpForm() {
   const [name, setName]             = useState('');
+  const [relation, setRelation]     = useState('');
   const [attendance, setAttendance] = useState(null);
   const [activities, setActivities] = useState(INITIAL_ACTIVITIES);
+  const [needsLift, setNeedsLift]   = useState(null);
+  const [offersLift, setOffersLift] = useState(null);
+  const [liftFrom, setLiftFrom]     = useState('');
+  const [liftSeats, setLiftSeats]   = useState('');
+  const [budget, setBudget]         = useState('');
   const [dietary, setDietary]       = useState('');
+  const [special, setSpecial]       = useState('');
+  const [kinName, setKinName]       = useState('');
+  const [kinContact, setKinContact] = useState('');
   const [comments, setComments]     = useState('');
   const [status, setStatus]         = useState('idle'); // idle | submitting | success | error
 
@@ -114,13 +123,22 @@ export default function RsvpForm() {
 
     const payload = {
       name,
+      relation,
       attendance: attendance ?? 'no answer',
       activity_brunch:  activities.brunch  ?? 'no answer',
       activity_skeet:   activities.skeet   ?? 'no answer',
       activity_supper:  activities.supper  ?? 'no answer',
       activity_axes:    activities.axes    ?? 'no answer',
       activity_tavern:  activities.tavern  ?? 'no answer',
+      needs_lift:  needsLift  ?? 'no answer',
+      offers_lift: offersLift ?? 'no answer',
+      lift_from:   liftFrom   || '',
+      lift_seats:  liftSeats  || '',
+      budget,
       dietary,
+      special_tribute: special,
+      next_of_kin_name:    kinName,
+      next_of_kin_contact: kinContact,
       comments,
     };
 
@@ -136,6 +154,12 @@ export default function RsvpForm() {
         setName(''); setAttendance(null);
         setActivities(INITIAL_ACTIVITIES);
         setDietary(''); setComments('');
+        setRelation('');
+        setNeedsLift(null); setOffersLift(null);
+        setLiftFrom(''); setLiftSeats('');
+        setBudget('');
+        setSpecial('');
+        setKinName(''); setKinContact('');
       } else {
         setStatus('error');
       }
@@ -156,6 +180,20 @@ export default function RsvpForm() {
 
       <form onSubmit={handleSubmit} className="glass-card p-8 flex flex-col gap-6">
 
+        {/* Urgency note */}
+        <div
+          className="text-center py-3 px-4 rounded-lg"
+          style={{ background: 'rgba(255,107,0,0.06)', border: '1px solid rgba(255,107,0,0.18)' }}
+        >
+          <p className="font-cinzel text-xs tracking-[2px] uppercase mb-1" style={{ color: 'var(--fire)' }}>
+            ⚔ Respond with haste ⚔
+          </p>
+          <p className="text-[12px] leading-relaxed" style={{ color: 'rgba(201,168,76,0.6)', fontFamily: 'Inter, sans-serif' }}>
+            The raiding expedition is less than three weeks away. Princess Calvin extends his sincerest
+            apologies for the urgency — he took longer than expected to accept his fate.
+          </p>
+        </div>
+
         {/* Name */}
         <div>
           <label
@@ -170,6 +208,23 @@ export default function RsvpForm() {
             onChange={e => setName(e.target.value)}
             placeholder="Enter your name..."
             style={inputStyle}
+            onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
+            onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
+          />
+        </div>
+
+        {/* Relation to Calvin */}
+        <div>
+          <label htmlFor="rsvp-relation" style={legendStyle}>
+            How did you end up here?
+          </label>
+          <textarea
+            id="rsvp-relation"
+            value={relation}
+            onChange={e => setRelation(e.target.value)}
+            placeholder="Explain to your fellow raiders what dark fate or cherished bond has led you to this moment..."
+            rows={2}
+            style={{ ...inputStyle, resize: 'vertical' }}
             onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
             onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
           />
@@ -221,6 +276,72 @@ export default function RsvpForm() {
           ))}
         </fieldset>
 
+        {/* Lifts / Chariots */}
+        <fieldset className="border-0 p-0 m-0">
+          <legend style={legendStyle}>Chariots &amp; Lifts</legend>
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <span className="text-[13px]" style={{ color: 'rgba(201,168,76,0.7)', fontFamily: 'Inter, sans-serif' }}>
+                Do you need a lift?
+              </span>
+              <TogglePair value={needsLift} onChange={setNeedsLift} />
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-[13px]" style={{ color: 'rgba(201,168,76,0.7)', fontFamily: 'Inter, sans-serif' }}>
+                Can you offer a lift?
+              </span>
+              <TogglePair value={offersLift} onChange={setOffersLift} />
+            </div>
+            {offersLift === 'aye' && (
+              <div className="flex gap-3 mt-1">
+                <div className="flex-1">
+                  <label htmlFor="rsvp-lift-from" style={{ ...legendStyle, marginBottom: 4 }}>Departing from</label>
+                  <input
+                    id="rsvp-lift-from"
+                    value={liftFrom}
+                    onChange={e => setLiftFrom(e.target.value)}
+                    placeholder="e.g. Brossard"
+                    style={inputStyle}
+                    onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
+                    onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
+                  />
+                </div>
+                <div style={{ width: 90 }}>
+                  <label htmlFor="rsvp-lift-seats" style={{ ...legendStyle, marginBottom: 4 }}>Seats</label>
+                  <input
+                    id="rsvp-lift-seats"
+                    type="number"
+                    min="1"
+                    max="9"
+                    value={liftSeats}
+                    onChange={e => setLiftSeats(e.target.value)}
+                    placeholder="3"
+                    style={inputStyle}
+                    onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
+                    onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        </fieldset>
+
+        {/* Budget */}
+        <div>
+          <label htmlFor="rsvp-budget" style={legendStyle}>
+            Budget for the evening (confidential)
+          </label>
+          <input
+            id="rsvp-budget"
+            value={budget}
+            onChange={e => setBudget(e.target.value)}
+            placeholder="e.g. $50–100 — your answer stays between you and the king's treasury"
+            style={inputStyle}
+            onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
+            onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
+          />
+        </div>
+
         {/* Dietary */}
         <div>
           <label htmlFor="rsvp-dietary" style={legendStyle}>
@@ -236,6 +357,50 @@ export default function RsvpForm() {
             onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
           />
         </div>
+
+        {/* Special tribute */}
+        <div>
+          <label htmlFor="rsvp-special" style={legendStyle}>
+            Speech or special tribute? (optional)
+          </label>
+          <textarea
+            id="rsvp-special"
+            value={special}
+            onChange={e => setSpecial(e.target.value)}
+            placeholder="e.g. I wish to make a toast, offer bottle service at supper, provide ammunition for skeet shooting..."
+            rows={2}
+            style={{ ...inputStyle, resize: 'vertical' }}
+            onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
+            onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
+          />
+        </div>
+
+        {/* Next of kin */}
+        <fieldset className="border-0 p-0 m-0">
+          <legend style={legendStyle}>Next of kin (just in case)</legend>
+          <div className="flex flex-col gap-3">
+            <input
+              id="rsvp-kin-name"
+              value={kinName}
+              onChange={e => setKinName(e.target.value)}
+              placeholder="Name of your chosen guardian..."
+              style={inputStyle}
+              aria-label="Next of kin name"
+              onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
+              onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
+            />
+            <input
+              id="rsvp-kin-contact"
+              value={kinContact}
+              onChange={e => setKinContact(e.target.value)}
+              placeholder="Their contact (phone or carrier pigeon frequency)..."
+              style={inputStyle}
+              aria-label="Next of kin contact"
+              onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
+              onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
+            />
+          </div>
+        </fieldset>
 
         {/* Comments */}
         <div>

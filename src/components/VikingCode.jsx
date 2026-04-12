@@ -5,7 +5,7 @@ const RULES = [
   { icon: '🪖', label: 'Horned helmets encouraged' },
   { icon: '🧔', label: 'Beards mandatory' },
   { icon: '🐺', label: 'Furs appreciated' },
-  { icon: '👑', label: "No crowns (Calvin's orders)" },
+  { icon: '👑', label: "Only a tiara (Calvin's orders)" },
 ];
 
 export default function VikingCode() {

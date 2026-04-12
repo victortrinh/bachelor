@@ -69,8 +69,16 @@ export default function Hero() {
         <Countdown />
       </div>
 
-      {/* Roman date stamp */}
-      <p className="font-cinzel text-[11px] tracking-[4px] relative z-10 text-gold-dim">
+      {/* Human-readable date — prominent */}
+      <p
+        className="font-cinzel font-semibold tracking-[3px] uppercase relative z-10"
+        style={{ fontSize: 'clamp(13px, 2.5vw, 17px)', color: 'var(--gold)' }}
+      >
+        Saturday, May 2, 2026
+      </p>
+
+      {/* Roman numeral decoration */}
+      <p className="font-cinzel text-[10px] tracking-[4px] relative z-10 text-gold-dim">
         ⚔ &nbsp; II · V · MMXXVI &nbsp; ⚔
       </p>
     </div>

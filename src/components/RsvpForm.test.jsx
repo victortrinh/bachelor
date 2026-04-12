@@ -18,9 +18,10 @@ describe('RsvpForm', () => {
 
   it('renders Aye/Nay buttons for each activity', () => {
     render(<RsvpForm />);
-    // 5 activities × 2 buttons = 10 toggle buttons, plus 2 overall attendance buttons
+    // 5 activities × 2 buttons = 10 toggle buttons, plus 2 overall attendance buttons,
+    // plus 2 lifts toggle buttons (needs lift + offers lift)
     const ayeButtons = screen.getAllByRole('button', { name: /aye/i });
-    expect(ayeButtons.length).toBe(6); // 1 overall + 5 activities
+    expect(ayeButtons.length).toBe(8); // 1 overall + 5 activities + 2 lifts
   });
 
   it('marks overall Aye button as selected when clicked', () => {

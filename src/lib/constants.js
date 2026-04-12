@@ -16,9 +16,9 @@ if (import.meta.env.DEV && FORMSPREE_ENDPOINT.includes('YOUR_FORM_ID')) {
 }
 
 export const ACTIVITIES = [
-  { id: 'brunch',  icon: '🍳', name: 'Brunch',        time: '12:00 – 2:00 PM',          fire: false },
-  { id: 'skeet',   icon: '🎯', name: 'Skeet Shooting', time: '2:00 – 5:00 PM',            fire: false },
-  { id: 'supper',  icon: '🥩', name: 'Supper',         time: '6:00 PM',                   fire: false },
-  { id: 'axes',    icon: '🪓', name: 'Axe Throwing',   time: '9:00 – 10:00 PM',           fire: false },
-  { id: 'tavern',  icon: '🍺', name: 'The Tavern',     time: 'Until the kingdom falls',   fire: true  },
+  { id: 'brunch',  icon: '🍳', name: 'Brunch',        time: '12:00 – 2:00 PM',          fire: false, location: 'TBD' },
+  { id: 'skeet',   icon: '🎯', name: 'Skeet Shooting', time: '2:00 – 5:00 PM',            fire: false, location: 'TBD' },
+  { id: 'supper',  icon: '🥩', name: 'Supper',         time: '6:00 PM',                   fire: false, location: 'TBD' },
+  { id: 'axes',    icon: '🪓', name: 'Axe Throwing',   time: '9:00 – 10:00 PM',           fire: false, location: 'TBD' },
+  { id: 'tavern',  icon: '🍺', name: 'The Tavern',     time: 'Until the kingdom falls',   fire: true,  location: 'TBD' },
 ];

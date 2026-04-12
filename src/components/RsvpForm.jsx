@@ -4,14 +4,15 @@ import SectionWrapper from './SectionWrapper';
 
 const INITIAL_ACTIVITIES = Object.fromEntries(ACTIVITIES.map(a => [a.id, null]));
 
-function TogglePair({ value, onChange, ayeLabel = 'Aye', nayLabel = 'Nay', fire = false }) {
+function TogglePair({ value, onChange, ayeLabel = 'Aye', nayLabel = 'Nay', fire = false, groupLabel = '' }) {
   const base = 'px-3.5 py-1.5 rounded-md font-cinzel text-[11px] tracking-[1px] cursor-pointer border transition-all duration-150';
 
   return (
     <div className="flex gap-1.5">
       <button
         type="button"
-        aria-label={ayeLabel}
+        aria-label={groupLabel ? `Aye: ${groupLabel}` : ayeLabel}
+        aria-pressed={value === 'aye'}
         data-selected={value === 'aye' ? 'true' : 'false'}
         onClick={() => onChange(value === 'aye' ? null : 'aye')}
         className={base}
@@ -31,7 +32,8 @@ function TogglePair({ value, onChange, ayeLabel = 'Aye', nayLabel = 'Nay', fire 
       </button>
       <button
         type="button"
-        aria-label={nayLabel}
+        aria-label={groupLabel ? `Nay: ${groupLabel}` : nayLabel}
+        aria-pressed={value === 'nay'}
         data-selected={value === 'nay' ? 'true' : 'false'}
         onClick={() => onChange(value === 'nay' ? null : 'nay')}
         className={base}
@@ -132,8 +134,7 @@ export default function RsvpForm() {
       activity_tavern:  activities.tavern  ?? 'no answer',
       needs_lift:  needsLift  ?? 'no answer',
       offers_lift: offersLift ?? 'no answer',
-      lift_from:   liftFrom   || '',
-      lift_seats:  liftSeats  || '',
+      ...(offersLift === 'aye' && { lift_from: liftFrom, lift_seats: liftSeats }),
       budget,
       dietary,
       special_tribute: special,
@@ -186,7 +187,7 @@ export default function RsvpForm() {
           style={{ background: 'rgba(255,107,0,0.06)', border: '1px solid rgba(255,107,0,0.18)' }}
         >
           <p className="font-cinzel text-xs tracking-[2px] uppercase mb-1" style={{ color: 'var(--fire)' }}>
-            ⚔ Respond with haste ⚔
+            <span aria-hidden="true">⚔</span> Respond with haste <span aria-hidden="true">⚔</span>
           </p>
           <p className="text-[12px] leading-relaxed" style={{ color: 'rgba(201,168,76,0.6)', fontFamily: 'Inter, sans-serif' }}>
             The raiding expedition is less than three weeks away. Princess Calvin extends his sincerest
@@ -284,13 +285,13 @@ export default function RsvpForm() {
               <span className="text-[13px]" style={{ color: 'rgba(201,168,76,0.7)', fontFamily: 'Inter, sans-serif' }}>
                 Do you need a lift?
               </span>
-              <TogglePair value={needsLift} onChange={setNeedsLift} />
+              <TogglePair value={needsLift}  onChange={setNeedsLift}  groupLabel="Do you need a lift?" />
             </div>
             <div className="flex items-center justify-between">
               <span className="text-[13px]" style={{ color: 'rgba(201,168,76,0.7)', fontFamily: 'Inter, sans-serif' }}>
                 Can you offer a lift?
               </span>
-              <TogglePair value={offersLift} onChange={setOffersLift} />
+              <TogglePair value={offersLift} onChange={setOffersLift} groupLabel="Can you offer a lift?" />
             </div>
             {offersLift === 'aye' && (
               <div className="flex gap-3 mt-1">
@@ -379,26 +380,30 @@ export default function RsvpForm() {
         <fieldset className="border-0 p-0 m-0">
           <legend style={legendStyle}>Next of kin (just in case)</legend>
           <div className="flex flex-col gap-3">
-            <input
-              id="rsvp-kin-name"
-              value={kinName}
-              onChange={e => setKinName(e.target.value)}
-              placeholder="Name of your chosen guardian..."
-              style={inputStyle}
-              aria-label="Next of kin name"
-              onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
-              onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
-            />
-            <input
-              id="rsvp-kin-contact"
-              value={kinContact}
-              onChange={e => setKinContact(e.target.value)}
-              placeholder="Their contact (phone or carrier pigeon frequency)..."
-              style={inputStyle}
-              aria-label="Next of kin contact"
-              onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
-              onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
-            />
+            <div>
+              <label htmlFor="rsvp-kin-name" style={legendStyle}>Guardian's name</label>
+              <input
+                id="rsvp-kin-name"
+                value={kinName}
+                onChange={e => setKinName(e.target.value)}
+                placeholder="Name of your chosen guardian..."
+                style={inputStyle}
+                onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
+                onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
+              />
+            </div>
+            <div>
+              <label htmlFor="rsvp-kin-contact" style={legendStyle}>Guardian's contact</label>
+              <input
+                id="rsvp-kin-contact"
+                value={kinContact}
+                onChange={e => setKinContact(e.target.value)}
+                placeholder="Their contact (phone or carrier pigeon frequency)..."
+                style={inputStyle}
+                onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
+                onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
+              />
+            </div>
           </div>
         </fieldset>
 
@@ -422,7 +427,7 @@ export default function RsvpForm() {
         {/* Submit */}
         <button
           type="submit"
-          aria-label="Pledge Your Sword"
+          aria-label={status === 'submitting' ? 'Sending your pledge...' : 'Pledge Your Sword'}
           disabled={status === 'submitting' || status === 'success'}
           className="w-full py-4 rounded-[10px] font-cinzel font-bold text-sm tracking-[3px] uppercase transition-all duration-200 disabled:opacity-60 hover:-translate-y-0.5 hover:shadow-[0_6px_30px_rgba(201,168,76,0.25)]"
           style={{

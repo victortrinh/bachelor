@@ -2,7 +2,7 @@ import { ACTIVITIES } from '@/lib/constants';
 import SectionWrapper from './SectionWrapper';
 
 function QuestCard({ activity }) {
-  const { icon, name, time, fire } = activity;
+  const { icon, name, time, fire, location, address } = activity;
 
   const bg         = fire ? 'rgba(100,35,0,0.07)'  : 'rgba(0,0,0,0.04)';
   const border     = fire ? 'rgba(100,35,0,0.22)'  : 'rgba(130,80,15,0.18)';
@@ -31,9 +31,15 @@ function QuestCard({ activity }) {
           <span className="text-xs text-gold-dim" aria-label={`Time: ${time}`}>
             🕐 {time}
           </span>
-          <span className="text-xs text-gold-dim">
-            📍 TBD
-          </span>
+          <a
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address || location)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-gold-dim hover:underline"
+            aria-label={`Open ${location} in Google Maps`}
+          >
+            📍 {location}{address ? ` · ${address}` : ''}
+          </a>
         </div>
       </div>
     </div>

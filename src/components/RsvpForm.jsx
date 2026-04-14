@@ -67,6 +67,17 @@ function ActivityRow({ activity, value, onChange }) {
           <p className="text-[11px] mt-0.5 truncate text-gold-dim">
             {activity.time}
           </p>
+          {activity.location && (
+            <a
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(activity.address || activity.location)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[11px] mt-0.5 truncate text-gold-dim hover:underline block"
+              aria-label={`Open ${activity.location} in Google Maps`}
+            >
+              📍 {activity.location}{activity.address ? ` · ${activity.address}` : ''}
+            </a>
+          )}
         </div>
       </div>
       <TogglePair value={value} onChange={onChange} fire={activity.fire} />
@@ -135,15 +146,15 @@ export default function RsvpForm() {
     e.preventDefault();
     setStatus('submitting');
 
+    const activityEntries = Object.fromEntries(
+      ACTIVITIES.map(a => [`activity_${a.id}`, activities[a.id] ?? 'no answer'])
+    );
+
     const payload = {
       name,
       relation,
       attendance: attendance ?? 'no answer',
-      activity_brunch:  activities.brunch  ?? 'no answer',
-      activity_skeet:   activities.skeet   ?? 'no answer',
-      activity_supper:  activities.supper  ?? 'no answer',
-      activity_axes:    activities.axes    ?? 'no answer',
-      activity_tavern:  activities.tavern  ?? 'no answer',
+      ...activityEntries,
       needs_lift:  needsLift  ?? 'no answer',
       offers_lift: offersLift ?? 'no answer',
       ...(needsLift  === 'aye' && { lift_need_from: liftNeedFrom }),
@@ -275,164 +286,165 @@ export default function RsvpForm() {
           </div>
         </fieldset>
 
-        {/* Per-activity */}
-        <fieldset className="border-0 p-0 m-0">
-          <legend style={legendStyle}>Which quests will you join?</legend>
-          {ACTIVITIES.map(activity => (
-            <ActivityRow
-              key={activity.id}
-              activity={activity}
-              value={activities[activity.id]}
-              onChange={val => setActivity(activity.id, val)}
-            />
-          ))}
-        </fieldset>
+        {attendance !== 'nay' && (<>
+          {/* Per-activity */}
+          <fieldset className="border-0 p-0 m-0">
+            <legend style={legendStyle}>Which quests will you join?</legend>
+            {ACTIVITIES.map(activity => (
+              <ActivityRow
+                key={activity.id}
+                activity={activity}
+                value={activities[activity.id]}
+                onChange={val => setActivity(activity.id, val)}
+              />
+            ))}
+          </fieldset>
 
-        {/* Lifts / Chariots */}
-        <fieldset className="border-0 p-0 m-0">
-          <legend style={legendStyle}>Chariots &amp; Lifts</legend>
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <span className="text-[13px]" style={{ color: 'rgba(201,168,76,0.7)', fontFamily: 'Inter, sans-serif' }}>
-                Do you need a lift?
-              </span>
-              <TogglePair value={needsLift}  onChange={setNeedsLift}  groupLabel="Do you need a lift?" />
-            </div>
-            {needsLift === 'aye' && (
-              <div>
-                <label htmlFor="rsvp-lift-need-from" style={{ ...legendStyle, marginBottom: 4 }}>Departing from</label>
-                <input
-                  id="rsvp-lift-need-from"
-                  value={liftNeedFrom}
-                  onChange={e => setLiftNeedFrom(e.target.value)}
-                  placeholder="e.g. Brossard"
-                  style={inputStyle}
-                  onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
-                  onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
-                />
+          {/* Lifts / Chariots */}
+          <fieldset className="border-0 p-0 m-0">
+            <legend style={legendStyle}>Chariots &amp; Lifts</legend>
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <span className="text-[13px]" style={{ color: 'rgba(201,168,76,0.7)', fontFamily: 'Inter, sans-serif' }}>
+                  Do you need a lift?
+                </span>
+                <TogglePair value={needsLift}  onChange={setNeedsLift}  groupLabel="Do you need a lift?" />
               </div>
-            )}
-            <div className="flex items-center justify-between">
-              <span className="text-[13px]" style={{ color: 'rgba(201,168,76,0.7)', fontFamily: 'Inter, sans-serif' }}>
-                Can you offer a lift?
-              </span>
-              <TogglePair value={offersLift} onChange={setOffersLift} groupLabel="Can you offer a lift?" />
-            </div>
-            {offersLift === 'aye' && (
-              <div className="flex gap-3 mt-1">
-                <div className="flex-1">
-                  <label htmlFor="rsvp-lift-from" style={{ ...legendStyle, marginBottom: 4 }}>Departing from</label>
+              {needsLift === 'aye' && (
+                <div>
+                  <label htmlFor="rsvp-lift-need-from" style={{ ...legendStyle, marginBottom: 4 }}>Departing from</label>
                   <input
-                    id="rsvp-lift-from"
-                    value={liftFrom}
-                    onChange={e => setLiftFrom(e.target.value)}
+                    id="rsvp-lift-need-from"
+                    value={liftNeedFrom}
+                    onChange={e => setLiftNeedFrom(e.target.value)}
                     placeholder="e.g. Brossard"
                     style={inputStyle}
                     onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
                     onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
                   />
                 </div>
-                <div style={{ width: 90 }}>
-                  <label htmlFor="rsvp-lift-seats" style={{ ...legendStyle, marginBottom: 4 }}>Seats</label>
-                  <input
-                    id="rsvp-lift-seats"
-                    type="number"
-                    min="1"
-                    max="9"
-                    value={liftSeats}
-                    onChange={e => setLiftSeats(e.target.value)}
-                    placeholder="3"
-                    style={inputStyle}
-                    onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
-                    onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
-                  />
-                </div>
+              )}
+              <div className="flex items-center justify-between">
+                <span className="text-[13px]" style={{ color: 'rgba(201,168,76,0.7)', fontFamily: 'Inter, sans-serif' }}>
+                  Can you offer a lift?
+                </span>
+                <TogglePair value={offersLift} onChange={setOffersLift} groupLabel="Can you offer a lift?" />
               </div>
-            )}
-          </div>
-        </fieldset>
-
-
-        {/* Dietary */}
-        <div>
-          <label htmlFor="rsvp-dietary" style={legendStyle}>
-            Dietary restrictions (optional)
-          </label>
-          <input
-            id="rsvp-dietary"
-            value={dietary}
-            onChange={e => setDietary(e.target.value)}
-            placeholder="Allergies, thou sacred burdens..."
-            style={inputStyle}
-            onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
-            onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
-          />
-        </div>
-
-        {/* Special tribute */}
-        <div>
-          <label htmlFor="rsvp-special" style={legendStyle}>
-            Speech or special tribute? (optional)
-          </label>
-          <textarea
-            id="rsvp-special"
-            value={special}
-            onChange={e => setSpecial(e.target.value)}
-            placeholder="e.g. I wish to make a toast, offer bottle service at supper, provide ammunition for skeet shooting..."
-            rows={2}
-            style={{ ...inputStyle, resize: 'vertical' }}
-            onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
-            onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
-          />
-        </div>
-
-        {/* Next of kin */}
-        <fieldset className="border-0 p-0 m-0">
-          <legend style={legendStyle}>Next of kin (just in case)</legend>
-          <div className="flex flex-col gap-3">
-            <div>
-              <label htmlFor="rsvp-kin-name" style={legendStyle}>Guardian's name</label>
-              <input
-                id="rsvp-kin-name"
-                value={kinName}
-                onChange={e => setKinName(e.target.value)}
-                placeholder="Who do we notify when things go sideways..."
-                style={inputStyle}
-                onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
-                onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
-              />
+              {offersLift === 'aye' && (
+                <div className="flex gap-3 mt-1">
+                  <div className="flex-1">
+                    <label htmlFor="rsvp-lift-from" style={{ ...legendStyle, marginBottom: 4 }}>Departing from</label>
+                    <input
+                      id="rsvp-lift-from"
+                      value={liftFrom}
+                      onChange={e => setLiftFrom(e.target.value)}
+                      placeholder="e.g. Brossard"
+                      style={inputStyle}
+                      onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
+                      onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
+                    />
+                  </div>
+                  <div style={{ width: 90 }}>
+                    <label htmlFor="rsvp-lift-seats" style={{ ...legendStyle, marginBottom: 4 }}>Seats</label>
+                    <input
+                      id="rsvp-lift-seats"
+                      type="number"
+                      min="1"
+                      max="9"
+                      value={liftSeats}
+                      onChange={e => setLiftSeats(e.target.value)}
+                      placeholder="3"
+                      style={inputStyle}
+                      onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
+                      onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
-            <div>
-              <label htmlFor="rsvp-kin-contact" style={legendStyle}>Guardian's contact</label>
-              <input
-                id="rsvp-kin-contact"
-                value={kinContact}
-                onChange={e => setKinContact(e.target.value)}
-                placeholder="Their contact (phone or carrier pigeon frequency)..."
-                style={inputStyle}
-                onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
-                onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
-              />
-            </div>
-          </div>
-        </fieldset>
+          </fieldset>
 
-        {/* Comments */}
-        <div>
-          <label htmlFor="rsvp-comments" style={legendStyle}>
-            Comments / excuses
-          </label>
-          <textarea
-            id="rsvp-comments"
-            value={comments}
-            onChange={e => setComments(e.target.value)}
-            placeholder="Speak your peace or hold your tongue forever..."
-            rows={3}
-            style={{ ...inputStyle, resize: 'vertical' }}
-            onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
-            onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
-          />
-        </div>
+          {/* Dietary */}
+          <div>
+            <label htmlFor="rsvp-dietary" style={legendStyle}>
+              Dietary restrictions (optional)
+            </label>
+            <input
+              id="rsvp-dietary"
+              value={dietary}
+              onChange={e => setDietary(e.target.value)}
+              placeholder="Allergies, thou sacred burdens..."
+              style={inputStyle}
+              onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
+              onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
+            />
+          </div>
+
+          {/* Special tribute */}
+          <div>
+            <label htmlFor="rsvp-special" style={legendStyle}>
+              Speech or special tribute? (optional)
+            </label>
+            <textarea
+              id="rsvp-special"
+              value={special}
+              onChange={e => setSpecial(e.target.value)}
+              placeholder="e.g. I wish to make a toast, offer bottle service at supper, provide ammunition for skeet shooting..."
+              rows={2}
+              style={{ ...inputStyle, resize: 'vertical' }}
+              onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
+              onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
+            />
+          </div>
+
+          {/* Next of kin */}
+          <fieldset className="border-0 p-0 m-0">
+            <legend style={legendStyle}>Next of kin (just in case)</legend>
+            <div className="flex flex-col gap-3">
+              <div>
+                <label htmlFor="rsvp-kin-name" style={legendStyle}>Guardian's name</label>
+                <input
+                  id="rsvp-kin-name"
+                  value={kinName}
+                  onChange={e => setKinName(e.target.value)}
+                  placeholder="Who do we notify when things go sideways..."
+                  style={inputStyle}
+                  onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
+                  onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
+                />
+              </div>
+              <div>
+                <label htmlFor="rsvp-kin-contact" style={legendStyle}>Guardian's contact</label>
+                <input
+                  id="rsvp-kin-contact"
+                  value={kinContact}
+                  onChange={e => setKinContact(e.target.value)}
+                  placeholder="Their contact (phone or carrier pigeon frequency)..."
+                  style={inputStyle}
+                  onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
+                  onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
+                />
+              </div>
+            </div>
+          </fieldset>
+
+          {/* Comments */}
+          <div>
+            <label htmlFor="rsvp-comments" style={legendStyle}>
+              Comments / excuses
+            </label>
+            <textarea
+              id="rsvp-comments"
+              value={comments}
+              onChange={e => setComments(e.target.value)}
+              placeholder="Speak your peace or hold your tongue forever..."
+              rows={3}
+              style={{ ...inputStyle, resize: 'vertical' }}
+              onFocus={e => { e.target.style.borderColor = 'rgba(201,168,76,0.5)'; e.target.style.boxShadow = '0 0 16px rgba(201,168,76,0.08)'; }}
+              onBlur={e  => { e.target.style.borderColor = 'rgba(201,168,76,0.2)'; e.target.style.boxShadow = 'none'; }}
+            />
+          </div>
+        </>)}
 
         {/* Submit */}
         <button

@@ -16,9 +16,8 @@ if (import.meta.env.DEV && FORMSPREE_ENDPOINT.includes('YOUR_FORM_ID')) {
 }
 
 export const ACTIVITIES = [
-  { id: 'brunch',  icon: '🍳', name: 'Brunch',        time: '12:00 – 2:00 PM',          fire: false, location: 'TBD' },
-  { id: 'skeet',   icon: '🎯', name: 'Skeet Shooting', time: '2:00 – 5:00 PM',            fire: false, location: 'TBD' },
-  { id: 'supper',  icon: '🥩', name: 'Supper',         time: '6:00 PM',                   fire: false, location: 'TBD' },
-  { id: 'axes',    icon: '🪓', name: 'Axe Throwing',   time: '9:00 – 10:00 PM',           fire: false, location: 'TBD' },
-  { id: 'tavern',  icon: '🍺', name: 'The Tavern',     time: 'Until the kingdom falls',   fire: true,  location: 'TBD' },
+  { id: 'brunch',  icon: '🍳', name: 'Brunch',        time: '12:30 – 2:00 PM',          fire: false, location: 'Petinos',               address: '590 Ave Saint-Charles, Vaudreuil-Dorion' },
+  { id: 'skeet',   icon: '🎯', name: 'Skeet Shooting', time: '2:00 – 4:00 PM',            fire: false, location: 'Montreal Skeet Club',    address: 'Les Cèdres, QC' },
+  { id: 'axes',    icon: '🪓', name: 'Axe Throwing / NERF',   time: '6:00 – 8:00 PM',    fire: false, location: 'Sports de Combats',      address: '5335 Ave Casgrain, Montréal' },
+  { id: 'tavern',  icon: '🍺', name: 'The Tavern',     time: '8:30 PM – Until the kingdom falls', fire: true, location: 'Auberge du Dragon Rouge', address: '8870 Rue Lajeunesse, Montréal' },
 ];

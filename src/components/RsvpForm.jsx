@@ -52,19 +52,19 @@ function TogglePair({ value, onChange, ayeLabel = 'Aye', nayLabel = 'Nay', fire 
 function ActivityRow({ activity, value, onChange }) {
   return (
     <div
-      className="flex items-center justify-between px-4 py-3 rounded-[10px] mb-2"
+      className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between px-4 py-3 rounded-[10px] mb-2"
       style={{
         background: activity.fire ? 'rgba(255,90,0,0.02)' : 'rgba(255,255,255,0.02)',
         border: `1px solid ${activity.fire ? 'rgba(255,107,0,0.15)' : 'rgba(201,168,76,0.1)'}`,
       }}
     >
-      <div className="flex items-center gap-3 min-w-0">
-        <span className="text-lg flex-shrink-0" aria-hidden="true">{activity.icon}</span>
+      <div className="flex items-start gap-3 min-w-0">
+        <span className="text-lg flex-shrink-0 mt-0.5" aria-hidden="true">{activity.icon}</span>
         <div className="min-w-0">
-          <p className="font-cinzel text-[13px] font-semibold truncate" style={{ color: activity.fire ? '#ff9040' : 'var(--gold)' }}>
+          <p className="font-cinzel text-[13px] font-semibold" style={{ color: activity.fire ? '#ff9040' : 'var(--gold)' }}>
             {activity.name}
           </p>
-          <p className="text-[11px] mt-0.5 truncate text-gold-dim">
+          <p className="text-[11px] mt-0.5 text-gold-dim">
             {activity.time}
           </p>
           {activity.location && (
@@ -72,7 +72,7 @@ function ActivityRow({ activity, value, onChange }) {
               href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(activity.address || activity.location)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[11px] mt-0.5 truncate text-gold-dim hover:underline block"
+              className="text-[11px] mt-0.5 text-gold-dim hover:underline block break-words"
               aria-label={`Open ${activity.location} in Google Maps`}
             >
               📍 {activity.location}{activity.address ? ` · ${activity.address}` : ''}

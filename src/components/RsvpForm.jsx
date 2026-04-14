@@ -67,6 +67,11 @@ function ActivityRow({ activity, value, onChange }) {
           <p className="text-[11px] mt-0.5 text-gold-dim">
             {activity.time}
           </p>
+          {activity.cost && (
+            <p className="text-[11px] mt-0.5" style={{ color: 'rgba(201,168,76,0.45)' }}>
+              {activity.cost}
+            </p>
+          )}
           {activity.location && (
             <a
               href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(activity.address || activity.location)}`}

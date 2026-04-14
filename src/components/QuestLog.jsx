@@ -2,7 +2,7 @@ import { ACTIVITIES } from '@/lib/constants';
 import SectionWrapper from './SectionWrapper';
 
 function QuestCard({ activity }) {
-  const { icon, name, time, fire, location, address } = activity;
+  const { icon, name, time, fire, location, address, cost } = activity;
 
   const bg         = fire ? 'rgba(100,35,0,0.07)'  : 'rgba(0,0,0,0.04)';
   const border     = fire ? 'rgba(100,35,0,0.22)'  : 'rgba(130,80,15,0.18)';
@@ -40,6 +40,11 @@ function QuestCard({ activity }) {
           >
             📍 {location}{address ? ` · ${address}` : ''}
           </a>
+          {cost && (
+            <span className="text-xs" style={{ color: 'rgba(130,80,15,0.6)' }}>
+              💰 {cost}
+            </span>
+          )}
         </div>
       </div>
     </div>
